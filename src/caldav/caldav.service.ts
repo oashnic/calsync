@@ -221,11 +221,11 @@ export class CalDAVService {
                             if (err) {
                                 throw err;
                             }
-                            const data = result['d:multistatus']['d:response'];
+                            const data = result['D:multistatus']['D:response'];
                             const resultEvents: CalendarEvent[] = [];
                             if (data) {
                                 data.forEach((eventXML) => {
-                                    const iCalendarData = eventXML['d:propstat'][0]['d:prop'][0]['cal:calendar-data'][0];
+                                    const iCalendarData = eventXML['D:propstat'][0]['D:prop'][0]['C:calendar-data'][0];
                                     const calendarEvent = this.parseToCalendarEvent(iCalendarData);
                                     resultEvents.push(calendarEvent);
                                 });
@@ -263,7 +263,7 @@ export class CalDAVService {
      * END:VCALENDAR
      */
     public parseToCalendarEvent(iCalendarData: string): CalendarEvent {
-        const jcalData = ICAL.parse(iCalendarData);
+        const jcalData = ICAL.parse(iCalendarData['_']);
         const vcalendar = new ICAL.Component(jcalData);
         const vevent = vcalendar.getFirstSubcomponent('vevent');
         const event = new ICAL.Event(vevent);
@@ -282,7 +282,7 @@ export class CalDAVService {
         });
 
         // if you try to add a event with `METHOD:REQUEST` in another calendar you will get `The HTTP 415 Unsupported Media Type` error.
-        const iCalData = iCalendarData.replace('METHOD:REQUEST', '');
+        const iCalData = iCalendarData['_'].replace('METHOD:REQUEST', '');
 
         const calendarEvent = {
             uid: event.uid,
