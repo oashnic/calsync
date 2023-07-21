@@ -12,6 +12,7 @@ export type GCalDescriptor = {
   label: string,
   id: string,
   redactedSummary?: string
+  credentialDir?: string
 };
 
 export const isGCalDescriptor = (d: any): d is GCalDescriptor => d.kind === 'GCal';

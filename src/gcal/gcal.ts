@@ -26,9 +26,9 @@ function throttlingDelay() {
 
 export const listEvents = (gcal: GCalDescriptor, start: Date, end: Date): Promise<calendar_v3.Schema$Event[]> => {
   return new Promise((resolve, reject) => {
-    fs.readFile('credentials.json', (err, content) => {
+    fs.readFile(`${gcal.credentialDir}/credentials.json`, (err, content) => {
       if (err) return log(`Error loading client secret file: ${err}`);
-      authorize(JSON.parse(content.toString()), (oauth) => { 
+      authorize(JSON.parse(content.toString()), `${gcal.credentialDir}/token.json`, (oauth) => { 
         _listEvents(oauth, gcal.id, start, end)
         .then(resolve)
         .catch(reject);
@@ -39,9 +39,9 @@ export const listEvents = (gcal: GCalDescriptor, start: Date, end: Date): Promis
 
 export const deleteEvents = (gcal: GCalDescriptor, start: Date, end: Date) => {
   return new Promise((resolve, reject) => {
-    fs.readFile('credentials.json', (err, content) => {
+    fs.readFile(`${gcal.credentialDir}/credentials.json`, (err, content) => {
       if (err) return log(`Error loading client secret file: ${err}`);
-      authorize(JSON.parse(content.toString()), (oauth) => { 
+      authorize(JSON.parse(content.toString()), `${gcal.credentialDir}/token.json`, (oauth) => { 
         _deleteEvents(oauth, gcal.id, start, end)
         .then(resolve).catch(reject);
       });
@@ -51,9 +51,9 @@ export const deleteEvents = (gcal: GCalDescriptor, start: Date, end: Date) => {
 
 export const deleteEventsByIds = (gcal: GCalDescriptor, eventIds: string[]) => {
   return new Promise((resolve, reject) => {
-    fs.readFile('credentials.json', (err, content) => {
+    fs.readFile(`${gcal.credentialDir}/credentials.json`, (err, content) => {
       if (err) return log(`Error loading client secret file: ${err}`);
-      authorize(JSON.parse(content.toString()), (oauth) => { 
+      authorize(JSON.parse(content.toString()), `${gcal.credentialDir}/token.json`, (oauth) => { 
         _deleteEventsByIds(oauth, gcal.id, eventIds)
         .then(resolve).catch(reject);
       });
@@ -63,9 +63,9 @@ export const deleteEventsByIds = (gcal: GCalDescriptor, eventIds: string[]) => {
 
 export const insertEvents = (gcal: GCalDescriptor, events: Array<calendar_v3.Schema$Event>) => {
   return new Promise((resolve, reject) => {
-    fs.readFile('credentials.json', (err, content) => {
+    fs.readFile(`${gcal.credentialDir}/credentials.json`, (err, content) => {
       if (err) return log(`Error loading client secret file: ${err}`);
-      authorize(JSON.parse(content.toString()), (oauth) => { 
+      authorize(JSON.parse(content.toString()), `${gcal.credentialDir}/token.json`, (oauth) => { 
         _insertEvents(oauth, gcal.id, events)
         .then(resolve).catch(reject);
       });
@@ -75,9 +75,9 @@ export const insertEvents = (gcal: GCalDescriptor, events: Array<calendar_v3.Sch
 
 export const updateEvents = (gcal: GCalDescriptor, updates: { eventId: string, eventData: CalendarEventData }[]) => {
   return new Promise((resolve, reject) => {
-    fs.readFile('credentials.json', (err, content) => {
+    fs.readFile(`${gcal.credentialDir}/credentials.json`, (err, content) => {
       if (err) return log(`Error loading client secret file: ${err}`);
-      authorize(JSON.parse(content.toString()), (oauth) => { 
+      authorize(JSON.parse(content.toString()), `${gcal.credentialDir}/token.json`, (oauth) => { 
         _updateEvents(oauth, gcal.id, updates)
         .then(resolve).catch(reject);
       });
@@ -91,13 +91,13 @@ export const updateEvents = (gcal: GCalDescriptor, updates: { eventId: string, e
  * @param {Object} credentials The authorization client credentials.
  * @param {function} callback The callback to call with the authorized client.
  */
-function authorize(credentials, callback) {
+function authorize(credentials, tokenPath, callback) {
   const {client_secret, client_id, redirect_uris} = credentials.installed;
   const oAuth2Client = new google.auth.OAuth2(
       client_id, client_secret, redirect_uris[0]);
 
   // Check if we have previously stored a token.
-  fs.readFile(TOKEN_PATH, (err, token) => {
+  fs.readFile(tokenPath, (err, token) => {
     if (err) return getAccessToken(oAuth2Client, callback);
     oAuth2Client.setCredentials(JSON.parse(token.toString()));
     callback(oAuth2Client);
