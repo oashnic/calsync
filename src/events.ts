@@ -5,6 +5,7 @@
 
 import { calendar_v3 } from "googleapis";
 import { CalendarEvent as CalDAVCalendarEvent } from "./caldav/calendar-event";
+import moment from "moment-timezone";
 
 export type CalDAVEvent = CalDAVCalendarEvent;
 export type GCalEvent = calendar_v3.Schema$Event;
@@ -12,8 +13,9 @@ export type CalendarEvent = GCalEvent | CalDAVEvent;
 export type CalendarEventData = {
   summary: string,
   description?: string,
-  start: { date?: string, dateTime?: string },
-  end: { date?: string, dateTime?: string },
+  start: { date?: string, dateTime?: string, timeZone?: string },
+  end: { date?: string, dateTime?: string, timeZone?: string },
+  tzid: string,
   transparency?: string,
 }
 
@@ -36,13 +38,16 @@ export function extractGCalEventData(evt: GCalEvent): CalendarEventData {
     summary: evt.summary,
     start: {},
     end: {},
+    tzid: '',
     transparency: evt.transparency,
     description: evt.description,
   };
   if (evt.start && evt.start.date) data.start.date = evt.start.date;
   if (evt.start && evt.start.dateTime) data.start.dateTime = evt.start.dateTime;
+  if (evt.start && evt.start.timeZone) data.tzid = evt.start.timeZone;
   if (evt.end && evt.end.date) data.end.date = evt.end.date;
   if (evt.end && evt.end.dateTime) data.end.dateTime = evt.end.dateTime;
+  if (evt.end && evt.end.timeZone) data.tzid = evt.end.timeZone;
   return data;
 }
 
@@ -51,10 +56,11 @@ export function extractCalDAVEventData(evt: CalDAVEvent): CalendarEventData {
     summary: evt.summary,
     start: (evt.allDayEvent ?
       { date: formatDate(evt.startDate) } : // yyyy-mm-dd format
-      { dateTime: evt.startDate.toISOString() }),
+      { dateTime: moment.tz(moment(evt.startDate).format(`YYYY-MM-DD HH:mm`), evt.tzid).format()}),
     end: (evt.allDayEvent ?
       { date: formatDate(evt.endDate) } : // yyyy-mm-dd format
-      { dateTime: evt.endDate.toISOString() }),
+      { dateTime: moment.tz(moment(evt.endDate).format(`YYYY-MM-DD HH:mm`), evt.tzid).format()}),
+    tzid: evt.tzid,
     transparency: evt.iCalendarData.includes('TRANSP:TRANSPARENT') ? 'transparent' : undefined,
     description: evt.description
   };
@@ -80,6 +86,7 @@ export function compareEventsData(evtA: CalendarEventData, evtB: CalendarEventDa
   if (evtA.start.date && !evtB.start.date) return false;
   if (evtA.start.date !== evtB.start.date) return false;
   if (evtA.start.dateTime && !evtB.start.dateTime) return false;
+  if (evtA.tzid && !evtB.tzid) return false;
   if (evtA.end.dateTime && !evtB.end.dateTime) return false;
   if (evtA.start.dateTime && Date.parse(evtA.start.dateTime) !== Date.parse(evtB.start.dateTime)) return false;
   if (evtA.end.dateTime && Date.parse(evtA.end.dateTime) !== Date.parse(evtB.end.dateTime)) return false;

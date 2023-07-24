@@ -65,7 +65,7 @@ export function toGCal(
       )
     )
       continue;
-    srcEvtData.summary = NewSummary(srcEvtData.summary, srcEvt.redactedSummary);
+    srcEvtData.summary = srcEvtData.summary//NewSummary(srcEvtData.summary, srcEvt.redactedSummary);
 
     if (!matchingTargetEvt) {
       // No match on ID -> insert

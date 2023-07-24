@@ -18,6 +18,7 @@ describe('compareEventsData', () => {
       summary: 'summary',
       start: {},
       end: {},
+      tzid: '',
       transparency: 'transparent',
       description: 'description',
     };
