@@ -22,8 +22,8 @@ async function main() {
     for (const source of user.sources) {
       const fetchedEvents =
         source.kind === "CalDav"
-          ? await caldav.listEvents(source, start, end)
-          : await gcal.listEvents(source, start, end);
+          ? await caldav.listEvents(source, start, end).catch((e) => {const err = new Error(`user ${user.name} : ${e}`); throw err})
+          : await gcal.listEvents(source, start, end).catch((e) => {const err = new Error(`Error ${user.name} : ${e}`); throw err});
       log(`Fetched ${fetchedEvents.length} events for ${source.label}`);
 
       fetchedEvents.forEach((event: CalendarEvent) => {
