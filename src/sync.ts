@@ -10,6 +10,7 @@ import {
 } from "./events";
 import { NewSummary, ShouldCopy } from "./rules";
 import { calsyncFingerprint } from "./config"
+import moment from "moment-timezone";
 
 export type SyncToGCalInstructions = {
   insert: CalendarEventData[];
@@ -73,7 +74,25 @@ export function toGCal(
 
     if (!matchingTargetEvt) {
       // No match on ID -> insert
-      eventsInsert.push(srcEvtData);
+      const now = new Date()
+      now.setDate(now.getDate() - 1)
+      let endDate = new Date()
+
+      if (srcEvtData.end.date) {
+        if (srcEvtData.end.timeZone) {
+          endDate = new Date(moment.tz(moment(srcEvtData.end.date).format(`YYYY-MM-DD HH:mm`), srcEvtData.end.timeZone).format())
+        } else {
+          endDate = new Date(moment.tz(srcEvtData.end.date).format())
+        }
+      } else if (srcEvtData.end.dateTime) {
+        endDate = new Date(moment.tz(moment(srcEvtData.end.dateTime).format(`YYYY-MM-DD HH:mm`), srcEvtData.end.timeZone).format())
+      }
+
+
+      if (endDate > now) {
+        eventsInsert.push(srcEvtData);
+      }
+
     } else {
       // Match on ID -> update or do nothing
       markedTargetEventIds.push(matchingTargetEvt.id);
