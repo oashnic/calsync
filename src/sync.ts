@@ -9,7 +9,7 @@ import {
   isGCalEvent,
 } from "./events";
 import { NewSummary, ShouldCopy } from "./rules";
-import { calsyncFingerprint } from "./config";
+import { calsyncFingerprint } from "./config"
 
 export type SyncToGCalInstructions = {
   insert: CalendarEventData[];
