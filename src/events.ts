@@ -91,7 +91,9 @@ export function compareEventsData(evtA: CalendarEventData, evtB: CalendarEventDa
   if (evtA.start.dateTime && Date.parse(evtA.start.dateTime) !== Date.parse(evtB.start.dateTime)) return false;
   if (evtA.end.dateTime && Date.parse(evtA.end.dateTime) !== Date.parse(evtB.end.dateTime)) return false;
   if (evtA.transparency !== evtB.transparency) return false;
-  if (evtA.description !== evtB.description) return false;
+  if (!evtA.description.includes("https://meet.google.com") && !evtB.description.includes("https://meet.google.com")) {
+    if (evtA.description !== evtB.description) return false;
+  }
 
   return true;
 }
