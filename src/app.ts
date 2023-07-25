@@ -95,7 +95,8 @@ async function main() {
         );
       const instructions: sync.SyncToGCalInstructions = sync.toGCal(
         sourcesEvents,
-        targetEvents
+        targetEvents,
+        user.replaceSummary
       );
 
       log(

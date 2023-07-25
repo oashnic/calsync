@@ -26,6 +26,7 @@ export const LOG_DETAIL = true;
 
 export type user = {
   name: string,
+  replaceSummary: boolean,
   sources: CalendarDescriptor[],
   target: CalendarDescriptor,
 }
@@ -33,6 +34,7 @@ export type user = {
 export const users: user[] = [
   {
     name: "example",
+    replaceSummary: true,
     sources: [
       {
         kind: 'GCal',

@@ -31,7 +31,8 @@ export type SyncToGCalInstructions = {
  */
 export function toGCal(
   sourcesEvents: { event: CalendarEvent; redactedSummary: string }[],
-  targetEvents: GCalEvent[]
+  targetEvents: GCalEvent[],
+  replaceSummary: boolean,
 ): SyncToGCalInstructions {
   const eventsInsert: CalendarEventData[] = [];
   const eventsUpdate: { eventId: string; eventData: CalendarEventData }[] = [];
@@ -65,7 +66,10 @@ export function toGCal(
       )
     )
       continue;
-    srcEvtData.summary = srcEvtData.summary//NewSummary(srcEvtData.summary, srcEvt.redactedSummary);
+    
+    if (replaceSummary) {
+      srcEvtData.summary = NewSummary(srcEvtData.summary, srcEvt.redactedSummary);
+    }
 
     if (!matchingTargetEvt) {
       // No match on ID -> insert

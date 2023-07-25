@@ -44,7 +44,7 @@ describe("ToGCal", () => {
       { event: fixtures.GetCalDAV("transparent"), redactedSummary: undefined },
     ];
     const targetEvents = [];
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [],
       update: [],
       delete: [],
@@ -64,7 +64,7 @@ describe("ToGCal", () => {
     );
     expectedInsertEventData.summary = "redacted";
 
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [expectedInsertEventData],
       update: [],
       delete: [],
@@ -74,7 +74,7 @@ describe("ToGCal", () => {
   test("empty sources and target", () => {
     const sourcesEvents = [];
     const targetEvents = [];
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [],
       update: [],
       delete: [],
@@ -87,7 +87,7 @@ describe("ToGCal", () => {
       { event: fixtures.GetCalDAV("allDay"), redactedSummary: undefined },
     ];
     const targetEvents = [];
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: sourcesEvents.map((e) => mapEventToDataWithDescription(e.event)),
       update: [],
       delete: [],
@@ -100,7 +100,7 @@ describe("ToGCal", () => {
       fixtures.GetGCal("common"),
       fixtures.GetCalDAV("nonTransparent"),
     ].map((e) => mapEventToTargetEvent(e));
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [],
       update: [],
       delete: targetEvents.map((e) => e.id),
@@ -119,7 +119,7 @@ describe("ToGCal", () => {
       mapEventToTargetEvent(e.event)
     );
 
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [],
       update: [],
       delete: [],
@@ -135,7 +135,7 @@ describe("ToGCal", () => {
       mapEventToTargetEvent(e.event)
     );
 
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [],
       update: [],
       delete: ["00000001-AAAA-BBBB-CCCC-DDDDDDDDDDDD"],
@@ -172,7 +172,7 @@ describe("ToGCal", () => {
     updateEvtData.summary = updatedGCalEvent.summary;
     updateEvtData.description = targetUpdatedEvent.description; // keeping the updated event's ID in the description
 
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [],
       update: [{ eventId: targetUpdatedEvent.id, eventData: updateEvtData }],
       delete: [],
@@ -191,7 +191,7 @@ describe("ToGCal", () => {
       mapEventToTargetEvent(e)
     );
 
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [mapEventToDataWithDescription(fixtures.GetGCal("common"))],
       update: [],
       delete: [],
@@ -212,7 +212,7 @@ describe("ToGCal", () => {
       fixtures.GetCalDAV("transparent"),
     ].map((e) => mapEventToTargetEvent(e));
 
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [],
       update: [],
       delete: [fixtures.GetCalDAV("transparent").uid],
@@ -249,7 +249,7 @@ describe("ToGCal", () => {
 
     expect(
       (() => {
-        const results = sync.toGCal(sourcesEvents, targetEvents);
+        const results = sync.toGCal(sourcesEvents, targetEvents, true);
         return results;
       })()
     ).toStrictEqual({
@@ -267,7 +267,7 @@ describe("ToGCal", () => {
     const targetEvents = [targetEvent].map((e) => mapEventToTargetEvent(e));
     targetEvents[0]["description"] = "This event should simply be ignored";
 
-    expect(sync.toGCal(sourcesEvents, targetEvents)).toStrictEqual({
+    expect(sync.toGCal(sourcesEvents, targetEvents, true)).toStrictEqual({
       insert: [],
       update: [],
       delete: [],
