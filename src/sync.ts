@@ -57,7 +57,7 @@ export function toGCal(
       return undefined;
     })();
 
-    srcEvtData.description = (srcEvtData.description || '') + `\nOriginal ID: ${matchingId}\n${calsyncFingerprint}`;
+    srcEvtData.description = `Original ID: ${matchingId}\n${calsyncFingerprint}` //(srcEvtData.description || '') + `\nOriginal ID: ${matchingId}\n${calsyncFingerprint}`;
 
     // Ignoring events not to be copied
     if (
