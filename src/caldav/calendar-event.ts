@@ -57,6 +57,6 @@ export interface CalendarEvent {
     attendees?: string[] | string[][];
 
     isRecurring?: boolean;
-    recurrenceId?: number;
+    recurrenceId?: Date;
     recurrenceIterator?: any;
 }

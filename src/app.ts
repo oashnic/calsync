@@ -5,6 +5,8 @@ import * as gcal from "./gcal/gcal";
 import * as sync from "./sync";
 import { log, logWithEventData, logWithGCalEvent } from "./log";
 import { CalendarEvent, isCalDAVEvent, CalDAVEvent } from "./events";
+import ICalParser from 'ical-js-parser';
+import * as ical from "ical2json";
 
 const WRITE_TO_FILE = process.env["WRITE_TO_FILE"] === "true" ?? false;
 const CLEAN_TARGET = false;
@@ -63,6 +65,17 @@ async function main() {
               startDate: nextOccurrenceStartDate,
               endDate: nextOccurrenceEndDate,
             };
+
+            // const exist = false;
+
+            // for (const srcEvt of sourcesEvents) {
+            //   const tmp = srcEvt.event as CalDAVEvent
+            //   if (tmp.summary.includes("debug")){
+            //   if (tmp.uid.split("-")[0] === nextOccurrenceEvent.uid.split("-")[0]) {
+            //     console.log(srcEvt)
+            //   }}
+            // }
+
             sourcesEvents.push({
               event: nextOccurrenceEvent,
               redactedSummary: source.redactedSummary,
@@ -75,6 +88,20 @@ async function main() {
           // some instances are within the fetched period.
           return;
         }
+
+        const tmp = event as CalDAVEvent
+        if (tmp.recurrenceId){
+          for (let i = 0; i < sourcesEvents.length; i++) {
+            const srcEvent = sourcesEvents[i]
+            const tmp2 = srcEvent.event as CalDAVEvent;
+            
+            const d = new Date(tmp.recurrenceId)
+            if (tmp2.uid.includes(tmp.uid) && tmp2.startDate.getTime() === d.getTime()){
+              sourcesEvents[i].event = tmp
+            }
+          }
+        }
+
         sourcesEvents.push({
           event,
           redactedSummary: source.redactedSummary,

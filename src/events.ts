@@ -11,6 +11,7 @@ export type CalDAVEvent = CalDAVCalendarEvent;
 export type GCalEvent = calendar_v3.Schema$Event;
 export type CalendarEvent = GCalEvent | CalDAVEvent;
 export type CalendarEventData = {
+  uid?: string,
   summary: string,
   description?: string,
   start: { date?: string, dateTime?: string, timeZone?: string },

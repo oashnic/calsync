@@ -44,20 +44,30 @@ export function toGCal(
   for (const srcEvt of sourcesEvents) {
     const srcEvtData = extractEventData(srcEvt.event);
     const matchingId = (() => {
-      if (isGCalEvent(srcEvt.event)) return srcEvt.event.id;
-      if (isCalDAVEvent(srcEvt.event)) return srcEvt.event.uid;
+      if (isGCalEvent(srcEvt.event)){
+        if (srcEvt.event.start.date) {
+          return `${srcEvt.event.id}-${srcEvt.event.start.date}`
+        } else if (srcEvt.event.start.dateTime){
+          return `${srcEvt.event.id}-${srcEvt.event.start.dateTime}`
+        } else {
+          return `${srcEvt.event.id}`
+        }
+      }
+      if (isCalDAVEvent(srcEvt.event)) {
+        return `${srcEvt.event.uid}-${srcEvt.event.startDate.getTime()}`;
+      } 
     })();
 
     // Search matching event in targetEvents
     const matchingTargetEvt = (() => {
       for (const targetEvt of targetEvents) {
-        if (targetEvt.description && targetEvt.description.includes(matchingId))
+        if (targetEvt.description && targetEvt.description.includes(`${matchingId}-${srcEvtData.start.dateTime}-${srcEvtData.start.date}END`))
           return targetEvt;
       }
       return undefined;
     })();
 
-    srcEvtData.description = `Original ID: ${matchingId}\n${calsyncFingerprint}` //(srcEvtData.description || '') + `\nOriginal ID: ${matchingId}\n${calsyncFingerprint}`;
+    srcEvtData.description = `Original ID: ${matchingId}-${srcEvtData.start.dateTime}-${srcEvtData.start.date}END\n${calsyncFingerprint}` //(srcEvtData.description || '') + `\nOriginal ID: ${matchingId}\n${calsyncFingerprint}`;
 
     // Ignoring events not to be copied
     if (
@@ -100,6 +110,7 @@ export function toGCal(
       if (
         !compareEventsData(extractGCalEventData(matchingTargetEvt), srcEvtData)
       ) {
+        const d = extractEventData(matchingTargetEvt)
         // Not matching on content -> update
         eventsUpdate.push({
           eventId: matchingTargetEvt.id,

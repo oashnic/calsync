@@ -226,8 +226,10 @@ export class CalDAVService {
                             if (data) {
                                 data.forEach((eventXML) => {
                                     const iCalendarData = eventXML['D:propstat'][0]['D:prop'][0]['C:calendar-data'][0];
-                                    const calendarEvent = this.parseToCalendarEvent(iCalendarData);
-                                    resultEvents.push(calendarEvent);
+                                    const calendarEvents = this.parseToCalendarEvent(iCalendarData);
+                                    for (const event of calendarEvents) {
+                                        resultEvents.push(event);
+                                    }
                                 });
                             }
                             resolve(resultEvents);
@@ -262,47 +264,54 @@ export class CalDAVService {
      * END:VEVENT
      * END:VCALENDAR
      */
-    public parseToCalendarEvent(iCalendarData: string): CalendarEvent {
+    public parseToCalendarEvent(iCalendarData: string): CalendarEvent[] {
+
+        const events: CalendarEvent[] = [];
+
         const jcalData = ICAL.parse(iCalendarData['_']);
         const vcalendar = new ICAL.Component(jcalData);
-        const vevent = vcalendar.getFirstSubcomponent('vevent');
-        const event = new ICAL.Event(vevent);
-        const tzid = vcalendar.getFirstSubcomponent('vtimezone') ? vcalendar.getFirstSubcomponent('vtimezone').getFirstPropertyValue('tzid') : 'Europe/Berlin';
-        const duration = {
-            weeks: event.duration.weeks,
-            days: event.duration.days,
-            hours: event.duration.hours,
-            minutes: event.duration.minutes,
-            seconds: event.duration.seconds,
-            isNegative: event.duration.isNegative
+        const vevents = vcalendar.getAllSubcomponents('vevent');
+        for (const vevent of vevents) {
+            const event = new ICAL.Event(vevent);
+            const tzid = vcalendar.getFirstSubcomponent('vtimezone') ? vcalendar.getFirstSubcomponent('vtimezone').getFirstPropertyValue('tzid') : 'Europe/Berlin';
+            const duration = {
+                weeks: event.duration.weeks,
+                days: event.duration.days,
+                hours: event.duration.hours,
+                minutes: event.duration.minutes,
+                seconds: event.duration.seconds,
+                isNegative: event.duration.isNegative
+            }
+            const attendees = [];
+            event.attendees.forEach((value) => {
+                attendees.push(value.getValues());
+            });
+
+            // if you try to add a event with `METHOD:REQUEST` in another calendar you will get `The HTTP 415 Unsupported Media Type` error.
+            const iCalData = iCalendarData['_'].replace('METHOD:REQUEST', '');
+
+            const calendarEvent = {
+                uid: event.uid,
+                summary: event.summary,
+                description: event.description,
+                location: event.location,
+                sequence: event.sequence,
+                startDate: event.startDate.toJSDate(),
+                endDate: event.endDate.toJSDate(),
+                duration,
+                organizer: event.organizer,
+                attendees,
+                isRecurring: event.isRecurring(),
+                recurrenceId: event.recurrenceId,
+                recurrenceIterator: event.iterator(),
+                allDayEvent: this.isAllDayEvent(duration),
+                tzid,
+                iCalendarData: iCalData
+            };
+
+            events.push(calendarEvent)
         }
-        const attendees = [];
-        event.attendees.forEach((value) => {
-            attendees.push(value.getValues());
-        });
-
-        // if you try to add a event with `METHOD:REQUEST` in another calendar you will get `The HTTP 415 Unsupported Media Type` error.
-        const iCalData = iCalendarData['_'].replace('METHOD:REQUEST', '');
-
-        const calendarEvent = {
-            uid: event.uid,
-            summary: event.summary,
-            description: event.description,
-            location: event.location,
-            sequence: event.sequence,
-            startDate: event.startDate.toJSDate(),
-            endDate: event.endDate.toJSDate(),
-            duration,
-            organizer: event.organizer,
-            attendees,
-            isRecurring: event.isRecurring(),
-            recurrenceId: event.recurrenceId,
-            recurrenceIterator: event.iterator(),
-            allDayEvent: this.isAllDayEvent(duration),
-            tzid,
-            iCalendarData: iCalData
-        };
-        return calendarEvent;
+        return events;
     }
 
 

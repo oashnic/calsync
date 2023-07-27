@@ -46,6 +46,6 @@ export function GetGCal(fixture: 'common'): GCalEvent {
   return JSON.parse(JSON.stringify(events.gCal.common));
 };
 
-export function GetCalDAV(fixture: 'transparent' | 'nonTransparent' | 'allDay' | 'nonAllDay'): CalDAVEvent {
+export function GetCalDAV(fixture: 'transparent' | 'nonTransparent' | 'allDay' | 'nonAllDay'): CalDAVEvent[] {
   return calDAVService.parseToCalendarEvent(events.calDAV[fixture]);
 }

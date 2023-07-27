@@ -581,6 +581,11 @@
   dependencies:
     "@sinonjs/commons" "^3.0.0"
 
+"@touch4it/ical-timezones@^1.6.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@touch4it/ical-timezones/-/ical-timezones-1.9.0.tgz#bbd85014f55b5cc3e9079ed7caccd8649b5170a3"
+  integrity sha512-UAiZMrFlgMdOIaJDPsKu5S7OecyMLr3GGALJTYkRgHmsHAA/8Ixm1qD09ELP2X7U1lqgrctEgvKj9GzMbczC+g==
+
 "@types/babel__core@^7.1.14":
   version "7.20.1"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.20.1.tgz#916ecea274b0c776fec721e333e55762d3a9614b"
@@ -967,6 +972,11 @@ color-name@~1.1.4:
   resolved "https://registry.yarnpkg.com/color-name/-/color-name-1.1.4.tgz#c2a09a87acbde69543de6f63fa3995c826c536a2"
   integrity sha512-dOy+3AuW3a2wNbZHIuMZpTcgjGuLU/uBL/ubcZF9OXbDo8ff4O8yVp5Bf0efS8uEoYo5q4Fx7dY9OgQGXgAsQA==
 
+commander@^6.2.1:
+  version "6.2.1"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-6.2.1.tgz#0792eb682dfbc325999bb2b84fddddba110ac73c"
+  integrity sha512-U7VdrJFnJgo4xjrHpTzu0yrHPGImdsmD95ZlgYSEajAn2JKzDhDTPG9kBTefmObL2w/ngeZnilk+OV9CG3d7UA==
+
 concat-map@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/concat-map/-/concat-map-0.0.1.tgz#d8a96bd77fd68df7793a73036a3ba0d5405d477b"
@@ -990,6 +1000,13 @@ cross-spawn@^7.0.3:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
+
+datez@0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/datez/-/datez-0.0.7.tgz#8cb1df78e6eef4b57b3cd9611257a957529b911e"
+  integrity sha512-r6Nr29nROX54OzZ8oosRSXzqRR2xpPIu8tdRsWnBitj7QYKpwUZz33h6q0zf64KDfopBozrmNbx/TsMLGCM4cg==
+  dependencies:
+    timezone-soft "1.4.1"
 
 debug@4, debug@^4.1.0, debug@^4.1.1:
   version "4.3.4"
@@ -1322,10 +1339,33 @@ human-signals@^2.1.0:
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-2.1.0.tgz#dc91fcba42e4d06e4abaed33b3e7a3c02f514ea0"
   integrity sha512-B4FFZ6q/T2jhhksgkbEW3HBvWIfDW85snkQgawt07S7J5QXTk6BkNV+0yAeZrM5QpMAdYlocGoljn0sJ/WQkFw==
 
+ical-js-parser@^0.7.4:
+  version "0.7.4"
+  resolved "https://registry.yarnpkg.com/ical-js-parser/-/ical-js-parser-0.7.4.tgz#343ad3331b72d10dc45d7062b0e937d0113962c4"
+  integrity sha512-8eI+xp+kIbMdozFoGjtDQPQkjYQNYY8D4LzGkCLJiSgwpxFio2gUKjtCuKpzvglIzpXy7GBSEQ/ekwRRInpmlA==
+  dependencies:
+    datez "0.0.7"
+    luxon "3.1.1"
+
 ical.js@^1.5.0:
   version "1.5.0"
   resolved "https://registry.yarnpkg.com/ical.js/-/ical.js-1.5.0.tgz#23213accd1d8f7248d01705acb06270a70d20662"
   integrity sha512-7ZxMkogUkkaCx810yp0ZGKvq1ZpRgJeornPttpoxe6nYZ3NLesZe1wWMXDdwTkj/b5NtXT+Y16Aakph/ao98ZQ==
+
+ical2json@^3.1.2:
+  version "3.1.2"
+  resolved "https://registry.yarnpkg.com/ical2json/-/ical2json-3.1.2.tgz#a6529bc223d698b9408c9c8b4dc935348747fb5b"
+  integrity sha512-xBDZJDFb81Xjx+F837NrAkXH8cXOgroML39ACQ9ckGjDWMQ9w6Doy+AJQ2fa5IJ782k+XRJfX31mwj0dhyFC3w==
+  dependencies:
+    commander "^6.2.1"
+
+ikalendar@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/ikalendar/-/ikalendar-1.4.0.tgz#094fe7695f934603e516f04dd136d90eeb336e07"
+  integrity sha512-gy13+RQ46jxNHVJ2UDEbv2sp20zLbmOqle1g7bdX+UK90s6aQoOeiYV8X/+nYWP53e+gmNerWDXZXSSTY0979A==
+  dependencies:
+    "@touch4it/ical-timezones" "^1.6.0"
+    rrule "^2.6.8"
 
 import-local@^3.0.2:
   version "3.1.0"
@@ -1911,6 +1951,11 @@ lru-cache@^6.0.0:
   dependencies:
     yallist "^4.0.0"
 
+luxon@3.1.1:
+  version "3.1.1"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.1.1.tgz#b492c645b2474fb86f3bd3283213846b99c32c1e"
+  integrity sha512-Ah6DloGmvseB/pX1cAmjbFvyU/pKuwQMQqz7d0yvuDlVYLTs2WeDHQMpC8tGjm1da+BriHROW/OEIT/KfYg6xw==
+
 make-dir@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-3.1.0.tgz#415e967046b3a7f1d185277d84aa58203726a13f"
@@ -2196,6 +2241,13 @@ resolve@^1.20.0:
     path-parse "^1.0.7"
     supports-preserve-symlinks-flag "^1.0.0"
 
+rrule@^2.6.8:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/rrule/-/rrule-2.7.2.tgz#cb899cb21bbe6c71b587107956604173b69f9143"
+  integrity sha512-NkBsEEB6FIZOZ3T8frvEBOB243dm46SPufpDckY/Ap/YH24V1zLeMmDY8OA10lk452NdrF621+ynDThE7FQU2A==
+  dependencies:
+    tslib "^2.4.0"
+
 safe-buffer@^5.0.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/safe-buffer/-/safe-buffer-5.2.1.tgz#1eaf9fa9bdb1fdd4ec75f58f9cdb4e6b7827eec6"
@@ -2358,6 +2410,11 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
+timezone-soft@1.4.1:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/timezone-soft/-/timezone-soft-1.4.1.tgz#854eb224545645d9ddad8bcd09144522b0652156"
+  integrity sha512-AnKhVnQmOjKHhdQXXe7cO7MyRGIHEGzedax4Y2N7nOr9dOYEFEBkWFJJwJTvPQvXsEtbWfa6xJj34iZKdC+W+g==
+
 tmpl@1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/tmpl/-/tmpl-1.0.5.tgz#8683e0b902bb9c20c4f726e3c0b69f36518c07cc"
@@ -2393,6 +2450,11 @@ ts-jest@^29.1.1:
     make-error "1.x"
     semver "^7.5.3"
     yargs-parser "^21.0.1"
+
+tslib@^2.4.0:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/tslib/-/tslib-2.6.1.tgz#fd8c9a0ff42590b25703c0acb3de3d3f4ede0410"
+  integrity sha512-t0hLfiEKfMUoqhG+U1oid7Pva4bbDPHYfJNiB7BiIjRkj1pyC++4N3huJfqY6aRH6VTB0rvtzQwjM4K6qpfOig==
 
 type-detect@4.0.8:
   version "4.0.8"
