@@ -54,7 +54,11 @@ export function toGCal(
         }
       }
       if (isCalDAVEvent(srcEvt.event)) {
-        return `${srcEvt.event.uid}-${srcEvt.event.startDate.getTime()}`;
+        if (srcEvt.event.uid.includes(`${srcEvt.event.startDate.getTime()}`)) {
+          return srcEvt.event.uid
+        } else {
+          return `${srcEvt.event.uid}-${srcEvt.event.startDate.getTime()}`;
+        }
       } 
     })();
 
