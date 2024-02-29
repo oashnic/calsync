@@ -31,9 +31,10 @@ export type SyncToGCalInstructions = {
  * @param targetEvents
  */
 export function toGCal(
-  sourcesEvents: { event: CalendarEvent; redactedSummary: string }[],
+  sourcesEvents: { event: CalendarEvent; prefixSummary: string; redactedSummary: string }[],
   targetEvents: GCalEvent[],
   replaceSummary: boolean,
+  addPrefix: boolean,
 ): SyncToGCalInstructions {
   const eventsInsert: CalendarEventData[] = [];
   const eventsUpdate: { eventId: string; eventData: CalendarEventData }[] = [];
@@ -82,6 +83,10 @@ export function toGCal(
     )
       continue;
     
+    if (addPrefix) {
+      srcEvtData.summary = NewSummary(srcEvtData.summary, `${srcEvt.prefixSummary}${srcEvtData.summary}`)
+    }
+
     if (replaceSummary) {
       srcEvtData.summary = NewSummary(srcEvtData.summary, srcEvt.redactedSummary);
     }

@@ -21,6 +21,7 @@ async function main() {
     const sourcesEvents: {
       event: CalendarEvent;
       redactedSummary: string | undefined;
+      prefixSummary: string | undefined;
     }[] = [];
     for (const source of user.sources) {
       const fetchedEvents =
@@ -41,6 +42,7 @@ async function main() {
             sourcesEvents.push({
               event: event,
               redactedSummary: source.redactedSummary,
+              prefixSummary: source.prefixSummary
             });
           }
           const it = event.recurrenceIterator;
@@ -79,6 +81,7 @@ async function main() {
             sourcesEvents.push({
               event: nextOccurrenceEvent,
               redactedSummary: source.redactedSummary,
+              prefixSummary: source.prefixSummary,
             });
           }
           // We skip the push below since we only want to push
@@ -105,6 +108,7 @@ async function main() {
         sourcesEvents.push({
           event,
           redactedSummary: source.redactedSummary,
+          prefixSummary: source.prefixSummary,
         });
       });
     }
@@ -124,7 +128,8 @@ async function main() {
       const instructions: sync.SyncToGCalInstructions = sync.toGCal(
         sourcesEvents,
         targetEvents,
-        user.replaceSummary
+        user.replaceSummary,
+        user.addPrefix
       );
 
       log(

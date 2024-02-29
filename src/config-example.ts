@@ -4,7 +4,8 @@ export type CalDavDescriptor = {
   url: string,
   username: string,
   password: string,
-  redactedSummary?: string
+  redactedSummary?: string,
+  prefixSummary?: string
 };
 
 export type GCalDescriptor = {
@@ -12,6 +13,7 @@ export type GCalDescriptor = {
   label: string,
   id: string,
   redactedSummary?: string
+  prefixSummary?: string,
   credentialDir?: string
 };
 
@@ -27,6 +29,7 @@ export const LOG_DETAIL = true;
 export type user = {
   name: string,
   replaceSummary: boolean,
+  addPrefix: boolean,
   sources: CalendarDescriptor[],
   target: CalendarDescriptor,
 }
@@ -35,6 +38,7 @@ export const users: user[] = [
   {
     name: "example",
     replaceSummary: true,
+    addPrefix: false,
     sources: [
       {
         kind: 'GCal',
