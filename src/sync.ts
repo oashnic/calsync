@@ -83,6 +83,8 @@ export function toGCal(
     )
       continue;
     
+    var srcEvtDataOldSummary = srcEvtData.summary;
+
     if (addPrefix) {
       srcEvtData.summary = NewSummary(srcEvtData.summary, `${srcEvt.prefixSummary}${srcEvtData.summary}`)
     }
@@ -109,7 +111,19 @@ export function toGCal(
 
 
       if (endDate > now) {
-        eventsInsert.push(srcEvtData);
+
+        var insert = true
+
+        for (const targetEvt of targetEvents) {
+          if (targetEvt.summary == srcEvtDataOldSummary && targetEvt.start.dateTime == srcEvtData.start.dateTime && targetEvt.end.dateTime == srcEvtData.end.dateTime) {
+            insert = false
+            break
+          }
+        }
+
+        if (insert) {
+          eventsInsert.push(srcEvtData);
+        }
       }
 
     } else {
