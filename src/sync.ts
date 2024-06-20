@@ -68,6 +68,11 @@ export function toGCal(
       for (const targetEvt of targetEvents) {
         if (targetEvt.description && targetEvt.description.includes(`${matchingId}-${srcEvtData.start.dateTime}-${srcEvtData.start.date}END`))
           return targetEvt;
+
+        if (compareEventsData(extractEventData(srcEvt.event), extractEventData(targetEvt), srcEvt.prefixSummary)) {
+          return targetEvt;
+        }
+
       }
       return undefined;
     })();
@@ -131,7 +136,7 @@ export function toGCal(
       markedTargetEventIds.push(matchingTargetEvt.id);
 
       if (
-        !compareEventsData(extractGCalEventData(matchingTargetEvt), srcEvtData)
+        !compareEventsData(extractGCalEventData(matchingTargetEvt), srcEvtData, srcEvt.prefixSummary)
       ) {
         const d = extractEventData(matchingTargetEvt)
         // Not matching on content -> update

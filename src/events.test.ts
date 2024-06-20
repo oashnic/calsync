@@ -35,7 +35,7 @@ describe('compareEventsData', () => {
 
   test('same events', () => {
     expect(
-      events.compareEventsData(fixture('date'), fixture('date'))
+      events.compareEventsData(fixture('date'), fixture('date'), '')
     ).toEqual(true);
   });
 
@@ -46,7 +46,7 @@ describe('compareEventsData', () => {
     evt.end.dateTime = '2020-01-01T14:00:00+01:00';
     evt.end.date = undefined;
     expect(
-      events.compareEventsData(fixture('datetime'), evt)
+      events.compareEventsData(fixture('datetime'), evt, '')
     ).toStrictEqual(true);
   });
 
@@ -55,7 +55,7 @@ describe('compareEventsData', () => {
     evt.start.date = undefined;
     evt.start.dateTime = '2020-01-01T12:00:00.000Z';
     expect(
-      events.compareEventsData(fixture('date'), evt)
+      events.compareEventsData(fixture('date'), evt, '')
     ).toEqual(false);
   });
 
@@ -63,7 +63,7 @@ describe('compareEventsData', () => {
     const evt = fixture('date');
     evt.start.date = '2020-01-02';
     expect(
-      events.compareEventsData(fixture('date'), evt)
+      events.compareEventsData(fixture('date'), evt, '')
     ).toEqual(false);
   });
 
@@ -75,7 +75,7 @@ describe('compareEventsData', () => {
     evtB.start.date = undefined;
     evtB.start.dateTime = '2020-01-01T13:00:00.000Z';
     expect(
-      events.compareEventsData(evtA, evtB)
+      events.compareEventsData(evtA, evtB, '')
     ).toEqual(false);
   });
 
@@ -83,7 +83,7 @@ describe('compareEventsData', () => {
     const evt = fixture('date');
     evt.summary = 'Not the same';
     expect(
-      events.compareEventsData(fixture('date'), evt)
+      events.compareEventsData(fixture('date'), evt, '')
     ).toEqual(false);
   });
 
@@ -91,7 +91,7 @@ describe('compareEventsData', () => {
     const evt = fixture('date');
     evt.transparency = undefined;
     expect(
-      events.compareEventsData(fixture('date'), evt)
+      events.compareEventsData(fixture('date'), evt, '')
     ).toEqual(false);
   });
 });

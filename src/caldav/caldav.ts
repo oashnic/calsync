@@ -13,5 +13,11 @@ export async function listEvents(
     calDesc.password
   );
   const calendarEvents = await calendarClient.getEvents(start, end);
+  
+  // Fix escape
+  for (let i = 0; i < calendarEvents.length; i++){
+    calendarEvents[i].summary = calendarEvents[i].summary.replace(/\\/g, '');
+  }
+
   return calendarEvents;
 }
